@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Web Kelas</title>
+
+<style>
+body{margin:0;font-family:Arial;background:#0b1c2d;color:white}
+.dark{background:#000}
+button,input{padding:8px;border-radius:6px;border:none}
+h2{text-align:center}
+
+#splash{
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  background:linear-gradient(#003,#046);
+}
+
+#web{display:none;padding:20px}
+
+.section{
+  background:#112b45;
+  padding:15px;
+  border-radius:10px;
+  margin-bottom:20px;
+}
+
+.anggota{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(110px,1fr));
+  gap:10px;
+}
+.anggota div{
+  background:#1b3b5f;
+  padding:10px;
+  border-radius:8px;
+  text-align:center;
+}
+
+.galeri{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
+  gap:10px;
+}
+.foto-box{position:relative}
+.foto-box img{width:100%;border-radius:10px}
+.hapus{
+  position:absolute;
+  top:5px;right:5px;
+  background:red;color:white;
+  border:none;border-radius:50%;
+  width:25px;height:25px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <h1>🌊 WEB KELAS</h1>
+  <button onclick="masuk()">Masuk</button>
+</div>
+
+<!-- WEB -->
+<div id="web">
+
+<button onclick="dark()">🌙 Mode Gelap</button>
+
+<div class="section">
+<h2>👋 Sambutan</h2>
+<p>Selamat datang di website kelas kami.</p>
+</div>
+
+<div class="section">
+<h2>📘 Deskripsi Kelas</h2>
+<p>Jumlah siswa: <b>43 orang</b></p>
+</div>
+
+<div class="section">
+<h2>🏫 Struktur Kelas</h2>
+<ul>
+<li>Ketua</li>
+<li>Wakil</li>
+<li>Sekretaris</li>
+<li>Bendahara</li>
+<li>Seksi Kebersihan</li>
+<li>Seksi Keamanan</li>
+</ul>
+</div>
+
+<div class="section">
+<h2>👥 Anggota Kelas</h2>
+<div class="anggota">
+<div>Andi</div><div>Budi</div><div>Citra</div><div>Dinda</div>
+<div>Eko</div><div>Fajar</div><div>Galih</div><div>Hana</div>
+<div>Iqbal</div><div>Jihan</div><div>Kevin</div><div>Lala</div>
+<div>Maulana</div><div>Nabila</div><div>Oki</div><div>Putri</div>
+<div>Raka</div><div>Siti</div><div>Taufik</div><div>Ulfa</div>
+<div>Vino</div><div>Wulan</div><div>Yoga</div><div>Zahra</div>
+<div>Adi</div><div>Bagas</div><div>Cindy</div><div>Dika</div>
+<div>Elsa</div><div>Farhan</div><div>Gita</div><div>Hadi</div>
+<div>Intan</div><div>Joko</div><div>Karina</div><div>Lukman</div>
+<div>Mega</div><div>Nando</div><div>Olivia</div>
+</div>
+</div>
+
+<div class="section">
+<h2>📸 Galeri Kelas</h2>
+
+<button onclick="login()">🔐 Upload Foto</button><br><br>
+
+<div id="uploadArea" style="display:none">
+<input type="file" id="foto">
+<button onclick="upload()">Upload</button>
+</div>
+
+<div class="galeri" id="galeri"></div>
+</div>
+
+</div>
+
+<script>
+const PASSWORD = "Ahmad taufik";
+
+function masuk(){
+  splash.style.display="none";
+  web.style.display="block";
+  tampil();
+}
+
+function dark(){
+  document.body.classList.toggle("dark");
+}
+
+function login(){
+  let p = prompt("Masukkan sandi:");
+  if(p === PASSWORD){
+    uploadArea.style.display="block";
+    alert("Akses diterima ✅");
+  } else {
+    alert("Sandi salah ❌");
+  }
+}
+
+function upload(){
+  let file = foto.files[0];
+  if(!file) return alert("Pilih foto!");
+
+  let r = new FileReader();
+  r.onload = function(){
+    let data = JSON.parse(localStorage.getItem("galeri")) || [];
+    data.push(r.result);
+    localStorage.setItem("galeri", JSON.stringify(data));
+    tampil();
+  };
+  r.readAsDataURL(file);
+}
+
+function tampil(){
+  galeri.innerHTML="";
+  let data = JSON.parse(localStorage.getItem("galeri")) || [];
+  data.forEach((img,i)=>{
+    galeri.innerHTML += `
+      <div class="foto-box">
+        <img src="${img}">
+        <button class="hapus" onclick="hapus(${i})">×</button>
+      </div>`;
+  });
+}
+
+function hapus(i){
+  let data = JSON.parse(localStorage.getItem("galeri"));
+  data.splice(i,1);
+  localStorage.setItem("galeri", JSON.stringify(data));
+  tampil();
+}
+</script>
+
+</body>
+</html>
